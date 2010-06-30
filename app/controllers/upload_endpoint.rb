@@ -9,7 +9,7 @@ class UploadEndpoint
     extension = File.extname(raw_filename)
     raw_filename_wo_extension = File.basename(env['HTTP_X_FILE_NAME'], extension)
     
-    url      = "/uploads/#{token}-#{raw_filename_wo_extension.parameterize}#{extension}"
+    url      = "/system/#{token}-#{raw_filename_wo_extension.parameterize}#{extension}"
     filename = "#{Rails.root}/public#{url}"
     
     if token == "1337"
