@@ -4,6 +4,10 @@
     Please drop files here
 </div>
 
+<div>
+    Only images &lt; 1MB
+</div>
+
 <h2>Preview Box</h2>
 
 <div id="previewbox">
@@ -79,7 +83,7 @@
                 var file = files[i];
                 var imageType = /image.*/;
 
-//                if(file.type.match(imageType)) {
+                if(file.type.match(imageType) && files[i].fileSize < 1048576) {
                     // create preview
                     try {
                         var img = document.createElement('img');
@@ -127,7 +131,7 @@
                     //     xhr.send(file);
                     // } 
                     xhr.send(file);
-//                }
+                }
             }
         }
         
