@@ -6,7 +6,6 @@ gem 'rails', '3.0.0.beta4'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mongrel'
-gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'ruby-debug'
 
 # Use unicorn as the web server
