@@ -25,4 +25,4 @@ Credits
 
 http://www.thecssninja.com/ for pointing out how it works Chrome and great explainations of the FileReader API.
 
-Copyright (c) 2010 Sebastian Deutsch, released under the MIT license.
+Copyright (c) 2010 9elements, released under the MIT license.
