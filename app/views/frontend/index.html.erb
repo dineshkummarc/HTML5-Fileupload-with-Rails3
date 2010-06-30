@@ -1,0 +1,168 @@
+<h2>Drop Area</h2>
+
+<div id="dropbox">
+    Please drop files here
+</div>
+
+<h2>Preview Box</h2>
+
+<div id="previewbox">
+</div>
+
+<h2>Upload Box</h2>
+
+<div id="uploadbox">
+</div>
+
+<h2>Output Box</h2>
+
+<div id="outputbox">
+</div>
+
+<footer>
+    Handcrafted in 2010 by <a href="http://9elements.com">9elements.com</a>
+</footer>
+
+<script>
+    jQuery(function($) {
+        function dragenter(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            $('#dropbox').css('background', '#a7ffa7');
+
+            return false;
+        }
+
+        function dragover(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            $('#dropbox').css('background', '#a7ffa7');
+
+            return false;
+        }
+
+        function dragleave(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            $('#dropbox').css('background', '#ffffff');
+
+            return false;
+        }
+
+        function drop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            $('#dropbox').css('background', '#ffffff');
+
+            // get files from drag and drop datatransfer or files in case of field change
+            if(typeof e.originalEvent.dataTransfer == "undefined") {
+                var files = e.originalEvent.target.files;
+            } else {
+                var files = e.originalEvent.dataTransfer.files;
+            }
+
+            handleFiles(files);
+
+            return false;
+        }
+
+        function handleFiles(files) {
+            var preview = document.getElementById('previewbox');
+            var upload  = document.getElementById('uploadbox');
+            var output  = document.getElementById('outputbox');
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var imageType = /image.*/;
+
+//                if(file.type.match(imageType)) {
+                    // create preview
+                    try {
+                        var img = document.createElement('img');
+                        img.file = file;
+                        img.style.width = "32px";
+                        preview.appendChild(img);
+
+                        var reader = new FileReader();
+                        reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+                        reader.readAsDataURL(file);
+                    } catch(exception) {
+                        var div = document.createElement('div');
+                        div.innerHTML = file.name;
+                        preview.appendChild(div);
+                    }
+
+                    // post
+                    var xhr = new XMLHttpRequest;
+                    xhr.open('put', '/upload/1337/', true);
+                    xhr.onprogress = function(e) {
+                        if (e.lengthComputable) {
+                            var k = 1024;
+                            upload.innerHTML += Number(e.loaded/k).toFixed() + "/"+ Number(e.total/k).toFixed() + "kB";
+                        }
+                    };
+                    xhr.onreadystatechange = function () {
+                        if (this.readyState != 4)
+                            return;
+                        upload.innerHTML += '<pre>' + this.responseText + '</pre>';
+                        output.innerHTML += '<img src="' + this.responseText + '" width="50" />'
+                    }
+                    
+                    xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+                    xhr.setRequestHeader('If-Modified-Since', 'Mon, 26 Jul 1997 05:00:00 GMT');
+                    xhr.setRequestHeader('Cache-Control', 'no-cache');
+                    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                    xhr.setRequestHeader('X-File-Name', file.fileName);
+                    xhr.setRequestHeader('X-File-Size', file.fileSize);
+                    xhr.setRequestHeader('X-File-Type', file.type);
+                    
+                    // since we're using put, we dont need no sendAsBinary
+                    // if(typeof(xhr.sendAsBinary) === 'function') {
+                    //     xhr.send(file);
+                    // } else {
+                    //     xhr.send(file);
+                    // } 
+                    xhr.send(file);
+//                }
+            }
+        }
+        
+        var dropbox = $('#dropbox').get(0);
+        
+        if(typeof window.FileReader === "function") {
+            /* yes we have a file api */
+            $('#dropbox').bind('dragenter', dragenter);
+            $('#dropbox').bind('dragover', dragover);
+            $('#dropbox').bind('dragleave', dragleave);
+            $('#dropbox').bind('drop', drop);
+        } else {
+            /* we have to code a workaround */
+            $('#dropbox').css('position', 'relative');
+            
+            var fileInput = $('<input />');
+            fileInput.attr({
+                'id'       : 'files-upload',
+                'type'     : 'file',
+                'multiple' : 'true'
+            });
+            fileInput.css({
+                'position' : 'absolute',
+                'top'      : '0',
+                'left'     : '0',
+                'width'    : '100%',
+                'height'   : '100%',
+                'opacity'  : '0.0'
+            });
+            
+            $('#dropbox').append(fileInput);
+            
+            $('#dropbox').bind('dragenter', dragenter);
+            $('#dropbox').bind('dragleave', dragleave);
+            $(fileInput).bind('change', drop);
+        }
+    });
+</script>

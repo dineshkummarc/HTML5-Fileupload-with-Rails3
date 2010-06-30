@@ -1,0 +1,41 @@
+body {
+  background: #eff6fe url(/images/cloud.png) 0 10px no-repeat;
+  font-family: 'Droid Serif','Georgia';
+  margin:10px;
+  padding:0;
+}
+
+a {
+  color: #f00;
+}
+
+h1 {
+  color: #0a3c7e;
+  font-family: "Lobster";
+  font-size: 73px;
+  text-shadow: #4e7dbc 1px 1px 1px;
+}
+
+h2, h3, h4, h5, h6, footer {
+  color: #0a3c7e;
+  font-family: "Lobster";  
+  text-shadow: white 1px 1px 1px;
+}
+
+footer {
+  margin-top: 50px;
+  color:#2e5d9c;
+}
+
+.container {
+  width:800px;
+}
+
+#dropbox {
+  border: 10px solid #2e5d9c;
+  background: #fff;
+  width:200px;height:200px;
+  padding: 10px 10px 10px 10px;
+  line-height: 200px;
+  text-align: center;
+}
