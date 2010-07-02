@@ -78,12 +78,61 @@
             var preview = document.getElementById('previewbox');
             var upload  = document.getElementById('uploadbox');
             var output  = document.getElementById('outputbox');
+            var queue = [];
+            
+            // send item in Queue via XHR
+            function sendItemInQueue(queuePosition) {
+                if(queuePosition < queue.length) {
+                    var file = queue[queuePosition];
+                    
+                    // post
+                    var xhr = new XMLHttpRequest;
+                    xhr.open('put', '/upload/1337/', true);
+                    xhr.onprogress = function(e) {
+                        if (e.lengthComputable) {
+                            var k = 1024;
+                            upload.innerHTML += Number(e.loaded/k).toFixed() + "/"+ Number(e.total/k).toFixed() + "kB";
+                        }
+                    };
+                    xhr.onreadystatechange = function () {
+                        if (this.readyState != 4)
+                            return;
+                
+                        var response = JSON.parse(this.responseText);
+                        upload.innerHTML += '<pre>' + this.responseText + '</pre>';
+                        output.innerHTML += '<img src="' + response.url + '" width="50" />';
+                        
+                        // process next item
+                        console.log('processed' + queuePosition);
+                        sendItemInQueue(queuePosition + 1);
+                    }
+            
+                    xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+                    xhr.setRequestHeader('If-Modified-Since', 'Mon, 26 Jul 1997 05:00:00 GMT');
+                    xhr.setRequestHeader('Cache-Control', 'no-cache');
+                    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                    xhr.setRequestHeader('X-File-Name', file.fileName);
+                    xhr.setRequestHeader('X-File-Size', file.fileSize);
+                    xhr.setRequestHeader('X-File-Type', file.type);
+            
+                    // since we're using put, we dont need no sendAsBinary
+                    // if(typeof(xhr.sendAsBinary) === 'function') {
+                    //     xhr.send(file);
+                    // } else {
+                    //     xhr.send(file);
+                    // } 
+                    xhr.send(file);                
+                } else {
+                    console.log('break at' + queuePosition);
+                }
+            }
 
+            // process file list
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
                 var imageType = /image.*/;
 
-                if(file.type.match(imageType) && files[i].fileSize < 1048576) {
+                if(1 == 1 || (file.type.match(imageType) && files[i].fileSize < 1048576)) {
                     // create preview
                     try {
                         var img = document.createElement('img');
@@ -99,40 +148,13 @@
                         div.innerHTML = file.name;
                         preview.appendChild(div);
                     }
-
-                    // post
-                    var xhr = new XMLHttpRequest;
-                    xhr.open('put', '/upload/1337/', true);
-                    xhr.onprogress = function(e) {
-                        if (e.lengthComputable) {
-                            var k = 1024;
-                            upload.innerHTML += Number(e.loaded/k).toFixed() + "/"+ Number(e.total/k).toFixed() + "kB";
-                        }
-                    };
-                    xhr.onreadystatechange = function () {
-                        if (this.readyState != 4)
-                            return;
-                        upload.innerHTML += '<pre>' + this.responseText + '</pre>';
-                        output.innerHTML += '<img src="' + this.responseText + '" width="50" />'
-                    }
                     
-                    xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-                    xhr.setRequestHeader('If-Modified-Since', 'Mon, 26 Jul 1997 05:00:00 GMT');
-                    xhr.setRequestHeader('Cache-Control', 'no-cache');
-                    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-                    xhr.setRequestHeader('X-File-Name', file.fileName);
-                    xhr.setRequestHeader('X-File-Size', file.fileSize);
-                    xhr.setRequestHeader('X-File-Type', file.type);
-                    
-                    // since we're using put, we dont need no sendAsBinary
-                    // if(typeof(xhr.sendAsBinary) === 'function') {
-                    //     xhr.send(file);
-                    // } else {
-                    //     xhr.send(file);
-                    // } 
-                    xhr.send(file);
+                    queue.push(file);
                 }
             }
+            
+            // trigger first item
+            sendItemInQueue(0);
         }
         
         var dropbox = $('#dropbox').get(0);

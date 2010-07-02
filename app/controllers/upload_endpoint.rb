@@ -14,11 +14,10 @@ class UploadEndpoint
     
     if token == "1337"
       File.open(filename, 'w') {|f| f.write( env['rack.input'].read ) }
-      result = [200, {}, [url]] 
+      result = [200, {}, ["{ \"url\" : \"#{url}\" }"]] 
     else
       result = [401, {}, ["could not authenticate you"]] 
     end
-    result = [200, {}, [url]]
     result 
   end
 end
