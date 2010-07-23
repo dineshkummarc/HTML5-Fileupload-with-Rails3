@@ -1,3 +1,20 @@
+/*
+ * @section general classes
+ */
+
+.clearfix { display:inline-block; }
+.clearfix:after { content:".";display:block;height:0;clear:both;visibility:hidden; }
+* html .clearfix { height:1%; }
+.clearfix { display:block; }
+
+.left { float:left; }
+.right { float:right; }
+.hide { display:none; }
+
+/*
+ * @section html styles
+ */
+
 body {
   background: #eff6fe url(/images/cloud.png) 0 10px no-repeat;
   font-family: 'Droid Serif','Georgia';
@@ -29,6 +46,19 @@ footer {
 
 .container {
   width:800px;
+}
+
+.col-1 {
+  float: left;
+  width: 590px;
+  padding-right: 30px;
+  border-right: 1px dotted #0a3c7e;
+  margin-right: 30px;
+}
+
+.col-2 {
+  float: left;
+  width: 590px;
 }
 
 #dropbox {
