@@ -61,7 +61,7 @@ footer {
   width: 590px;
 }
 
-#dropbox {
+#dropbox, #test {
   border: 10px solid #2e5d9c;
   background: #fff;
   width:200px;height:200px;
@@ -69,4 +69,8 @@ footer {
   line-height: 200px;
   text-align: center;
   margin-bottom: 10px;
+}
+
+.drag-over {
+  background: #a7ffa7 !important;
 }

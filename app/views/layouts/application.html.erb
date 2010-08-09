@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Html5fileupload</title>
-  <%= javascript_include_tag %w'jquery/jquery-1.4.2.min rails application ' %>
+  <%= javascript_include_tag %w'jquery/jquery-1.4.2.min rails application upload5' %>
   <%= csrf_meta_tag %>
   <!--[if lt IE 9]>
     <script src="/javascripts/html5.js"></script>
@@ -22,5 +22,16 @@
 <%= yield %>
 
 <a href="http://github.com/9elements/HTML5-Fileupload-with-Rails3"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub" /></a>
+
+<div id="test">
+  sdfsdfssd
+</div>
+
+<script>
+  jQuery(function($) {
+    $('#test').upload5();
+  });
+</script>
+
 </body>
 </html>
