@@ -29,7 +29,12 @@
 
 <script>
   jQuery(function($) {
-    $('#test').upload5();
+    $('#test').upload5({
+      uploadAction : "/upload/1337/",
+      completed : function(e) {
+        console.log(e)
+      }
+    });
   });
 </script>
 
